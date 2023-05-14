@@ -1,23 +1,28 @@
 #include "shell.h"
 
+
 /**
 *Main function contains loops for running commands
 */
 
 int main(int argc, char* argv[])
 {
+   
     char *line;
     char **subs;
-    int i = 0;
     
-    line = printprompt_readline();
-    subs = splitline(line);
-   
-    
+    while (1)
+      {
+        line = printprompt_readline();
+        subs = splitline(line);
+        
+        // Do something with the command
+      
+                
+        free(line);
+        free(subs);
+    }  
     return (0);
-
-  free(line);
-  free(subs);
 }
 
 
@@ -29,21 +34,14 @@ char* printprompt_readline()
     ssize_t getline_bytes;
     size_t zero = 0;
 
-    /*Print prompt*/ 
+    /*Function for reading stdin from user*/
     printf("$ ");
   
-    buffer = malloc(sizeof(char)*getline_bytes);
-    if(!buffer)
-    {
-        printf("Error:Malloc fail");
-    }
-    
-  
-    /*Function for reading stdin from user*/
     getline_bytes = getline(&buffer,&zero,stdin);
     if (getline_bytes<0)
     {
         printf("Error: Could not read line");
+        exit(EXIT_FAILURE);
     }
     else if (getline_bytes>0)
     {
@@ -54,7 +52,7 @@ char* printprompt_readline()
           }
     
     }
-   printprompt_readline();
+   
    return (buffer);
 }
 
@@ -62,28 +60,29 @@ char* printprompt_readline()
 
 char** splitline(char *buffer)
 {
-      char **splitted_buffer;
-      int i=0;
-      splitted_buffer = malloc(sizeof(char)*strlen(buffer)+1);
-      if (!splitted_buffer)
-      {
-          printf("Error: Malloc failed");
-          exit(EXIT_FAILURE);
-      }
-        
+    char **splitted_buffer;
+    char *token;
+    int i=0;
+    const char *delim = " "; // Define delimiters for strtok()
 
-      if (splitted_buffer[i]!=NULL)
-      {
-          splitted_buffer[i] = strtok(buffer, " ");
-          ++i;
-          splitted_buffer[i] = strtok(NULL, " ");
-      }
+    splitted_buffer = malloc(sizeof(char*) * strlen(buffer) + 1);
+    if (!splitted_buffer)
+    {
+        printf("Error: Malloc failed");
+        exit(EXIT_FAILURE);
+    }
+
+    token = strtok(buffer, delim);
+    while (token != NULL)
+    {
+        splitted_buffer[i++] = token;
+        token = strtok(NULL, delim);
+    }
   
-  return (splitted_buffer); 
+    splitted_buffer[i] = NULL; // Terminate the array with NULL pointer
+  
+    return (splitted_buffer); 
 }
-
-
-
 
 
 
