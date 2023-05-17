@@ -5,34 +5,34 @@
 *Main function contains loops for running commands
 */
 
-int main(int argc, char* argv[])
+int main(int argc,char* argv[])
 {
-   
-    char *line;
-    char **subs;
+    
+    
     
     while (1)
       {
-        line = printprompt_readline();
-        subs = splitline(line);
-        
-        // Do something with the command
-      
-                
-        free(line);
-        free(subs);
-    }  
+        //print line and read prompt
+        printprompt_readline(argc, argv);
+        //split line into tokens
+
+      }  
     return (0);
 }
 
 
 
-char* printprompt_readline()
+void printprompt_readline()
 {
     /*Initialization*/ 
-    char *buffer;
+    char *buffer = NULL;
+    char *sstring;
+    char* buffer_copy;
     ssize_t getline_bytes;
     size_t zero = 0;
+    int ntokens=0, i;
+    char** string_arr;
+    char* token;
 
     /*Function for reading stdin from user*/
     printf("$ ");
@@ -40,7 +40,7 @@ char* printprompt_readline()
     getline_bytes = getline(&buffer,&zero,stdin);
     if (getline_bytes<0)
     {
-        printf("Error: Could not read line");
+        perror("Error: Could not read line\n");
         exit(EXIT_FAILURE);
     }
     else if (getline_bytes>0)
@@ -52,47 +52,34 @@ char* printprompt_readline()
           }
     
     }
-   
-   return (buffer);
-}
+    buffer_copy = malloc(sizeof(char*)*getline_bytes);
+    strcpy(buffer, buffer_copy);
 
+    // tokenize string
+    sstring = strtok(buffer," ");
 
-
-char** splitline(char *buffer)
-{
-    char **splitted_buffer;
-    char *token;
-    int i=0;
-    const char *delim = " "; // Define delimiters for strtok()
-
-    splitted_buffer = malloc(sizeof(char*) * strlen(buffer) + 1);
-    if (!splitted_buffer)
+    if (sstring)
     {
-        printf("Error: Malloc failed");
-        exit(EXIT_FAILURE);
+        ntokens++;
+        sstring = strtok(NULL,buffer);
     }
+    ntokens++;
 
-    token = strtok(buffer, delim);
-    while (token != NULL)
+    string_arr = malloc(sizeof(char*)*ntokens);
+    
+    token = strtok(buffer_copy," ");
+    for(i=0;token!=NULL;i++)
     {
-        splitted_buffer[i++] = token;
-        token = strtok(NULL, delim);
+        string_arr[i] = malloc(sizeof(char)*strlen(token));
+        strcpy(string_arr[i],token);
+        token = strtok(NULL," ");
     }
+    string_arr[i]=NULL;
   
-    splitted_buffer[i] = NULL; // Terminate the array with NULL pointer
-  
-    return (splitted_buffer); 
+    executable(string_arr);
+
+    free(buffer_copy);
+    free(buffer);
 }
-
-
-
-
-
-
-
-
-
-
-
 
 

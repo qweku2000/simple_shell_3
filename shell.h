@@ -7,8 +7,5 @@
 
 
 
-
-void shell_loop(void);
-char* printprompt_readline();
-char **tokens();
-char** splitline(char *buffer);
+void printprompt_readline();
+void executable(char *argv[]);
