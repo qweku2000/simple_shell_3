@@ -13,7 +13,7 @@ int main(int argc,char* argv[])
     while (1)
       {
         //print line and read prompt
-        printprompt_readline(argc, argv);
+        printprompt_readline();
         //split line into tokens
 
       }  
@@ -43,36 +43,28 @@ void printprompt_readline()
         perror("Error: Could not read line\n");
         exit(EXIT_FAILURE);
     }
-    else if (getline_bytes>0)
-    {
-        while(buffer[getline_bytes-1] == '\n')
-          {
-               /*Replace newline with null terminator*/
-                 buffer[getline_bytes-1] = '\0';
-          }
     
-    }
-    buffer_copy = malloc(sizeof(char*)*getline_bytes);
-    strcpy(buffer, buffer_copy);
+    buffer_copy = malloc(getline_bytes);
+    strcpy(buffer_copy,buffer);
 
     // tokenize string
-    sstring = strtok(buffer," ");
+    sstring = strtok(buffer," \n");
 
     if (sstring)
     {
         ntokens++;
-        sstring = strtok(NULL,buffer);
+        sstring = strtok(NULL," \n");
     }
     ntokens++;
 
     string_arr = malloc(sizeof(char*)*ntokens);
     
-    token = strtok(buffer_copy," ");
+    token = strtok(buffer_copy," \n");
     for(i=0;token!=NULL;i++)
     {
-        string_arr[i] = malloc(sizeof(char)*strlen(token));
+        string_arr[i] = malloc(sizeof(char)*strlen(token)+1);
         strcpy(string_arr[i],token);
-        token = strtok(NULL," ");
+        token = strtok(NULL," \n");
     }
     string_arr[i]=NULL;
   
