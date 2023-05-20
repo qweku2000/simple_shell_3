@@ -6,17 +6,16 @@
 */
 
 int main(int argc,char* argv[])
-{
-    
-    
+{ 
     
     while (1)
       {
+        printf("$ ");
         //print line and read prompt
         printprompt_readline();
-        //split line into tokens
-
+        
       }  
+    
     return (0);
 }
 
@@ -29,29 +28,29 @@ void printprompt_readline()
     char *sstring;
     char* buffer_copy;
     ssize_t getline_bytes;
-    size_t zero = 0;
+    size_t n = 0;
     int ntokens=0, i;
     char** string_arr;
     char* token;
 
     /*Function for reading stdin from user*/
-    printf("$ ");
+    
   
-    getline_bytes = getline(&buffer,&zero,stdin);
+    getline_bytes = getline(&buffer,&n,stdin);
     if (getline_bytes<0)
     {
-        perror("Error: Could not read line\n");
+        perror("Error: getline failed\n");
         exit(EXIT_FAILURE);
     }
     
-    buffer_copy = malloc(getline_bytes);
-    strcpy(buffer_copy,buffer);
+    buffer_copy = strdup(buffer);
 
     // tokenize string
     sstring = strtok(buffer," \n");
 
     if (sstring)
     {
+        //Keep adding up to keep track of the number of bytes needed//
         ntokens++;
         sstring = strtok(NULL," \n");
     }
@@ -62,8 +61,7 @@ void printprompt_readline()
     token = strtok(buffer_copy," \n");
     for(i=0;token!=NULL;i++)
     {
-        string_arr[i] = malloc(sizeof(char)*strlen(token)+1);
-        strcpy(string_arr[i],token);
+        string_arr[i] = strdup(token);
         token = strtok(NULL," \n");
     }
     string_arr[i]=NULL;
@@ -72,6 +70,7 @@ void printprompt_readline()
 
     free(buffer_copy);
     free(buffer);
+    
 }
 
 
