@@ -10,10 +10,8 @@ int main(int argc,char* argv[])
     
     while (1)
       {
-        printf("$ ");
         //print line and read prompt
-        printprompt_readline();
-        
+        printprompt_readline();  
       }  
     
     return (0);
@@ -32,7 +30,17 @@ void printprompt_readline()
     int ntokens=0, i;
     char** string_arr;
     char* token;
-
+    char buf[1064];
+       
+  
+  
+        if(getcwd(buf, sizeof(buf))!=NULL)
+        {
+          printf("%s\n$ ",buf);
+        }
+        else{
+          perror("Error:cwd error");
+        }
     /*Function for reading stdin from user*/
     
   
