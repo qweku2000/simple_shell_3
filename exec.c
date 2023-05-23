@@ -1,5 +1,9 @@
-
 #include "shell.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+static char *previous_dir = NULL;
 
 /**
  * executable - Executes the given command
@@ -22,10 +26,70 @@ void executable(char *argv[])
         else if (strcmp(cmd, "cd") == 0)
         {
             /* Change directory using chdir function */
-            if (chdir(argv[1]) != 0)
+            if (argv[1] == NULL)
             {
-                perror("Error: chdir failed");
+                /* Change to previous directory */
+                if (previous_dir != NULL)
+                {
+                    if (chdir(previous_dir) != 0)
+                    {
+                        perror("Error: chdir failed");
+                    }
+                }
+                else
+                {
+                    printf("Error: No previous directory available\n");
+                }
             }
+            else if (strcmp(argv[1], "-") == 0)
+            {
+                /* Change to previous directory and update previous_dir */
+                if (previous_dir != NULL)
+                {
+                    char *current_dir = getcwd(NULL, 0);
+                    if (current_dir != NULL)
+                    {
+                        if (chdir(previous_dir) != 0)
+                        {
+                            perror("Error: chdir failed");
+                        }
+                        else
+                        {
+                            free(previous_dir);
+                            previous_dir = current_dir;
+                        }
+                    }
+                    else
+                    {
+                        perror("Error: getcwd failed");
+                    }
+                }
+                else
+                {
+                    printf("Error: No previous directory available\n");
+                }
+            }
+            else
+            {
+                /* Change to the specified directory */
+                if (chdir(argv[1]) != 0)
+                {
+                    perror("Error: chdir failed");
+                }
+                else
+                {
+                    /* Update previous_dir */
+                    if (previous_dir != NULL)
+                        free(previous_dir);
+                    previous_dir = getcwd(NULL, 0);
+                    if (previous_dir == NULL)
+                        perror("Error: getcwd failed");
+                }
+            }
+        }
+        else if (strcmp(cmd, "env") == 0)
+        {
+            environment_variables();
         }
         else
         {

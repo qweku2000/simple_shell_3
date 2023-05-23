@@ -18,3 +18,8 @@ char* environment(char* env);
 int exit_shell();
 int dir_change(char* argv);
 ssize_t getline(char **lineptr, size_t *n, FILE *stream);
+void environment_variables();
+
+
+
+extern char **environ;
