@@ -1,40 +1,76 @@
+
 #include "shell.h"
+
+/**
+ * executable - Executes the given command
+ * @argv: Array of arguments passed to the command
+ */
 void executable(char *argv[])
 {
     char *cmd = NULL;
     char *cmd_act = NULL;
 
-    if (argv) 
+    if (argv)
     {
-        // Command is assigned to the first string in argv
+        /* Command is assigned to the first string in argv */
         cmd = argv[0];
 
-        if(strcmp(cmd,"exit")==0)
+        if (strcmp(cmd, "exit") == 0)
         {
             exit_shell();
         }
-       else if (strcmp(cmd,"cd")==0)
-       {
-            //chdir function used to change dir
-            dir_change(argv[1]);
-            printprompt_readline();
-       }
-      else
-       {   
-        //make sure that the new command is now a full path of the commmand
-        cmd_act = environment(cmd);
-        
-        if (cmd_act != NULL) 
+        else if (strcmp(cmd, "cd") == 0)
         {
-            if (execve(cmd_act, argv, NULL) < 0) 
+            /* Change directory using chdir function */
+            if (chdir(argv[1]) != 0)
             {
-                perror("Error: execve failed");
+                perror("Error: chdir failed");
             }
-        } else 
+        }
+        else
+        {
+            /* Execute external command */
+
+            /* Create a child process */
+            pid_t pid = fork();
+
+            if (pid < 0)
             {
-                printf("Command not found: %s\n", cmd);
+                perror("Error: Fork failed");
             }
+            else if (pid == 0)
+            {
+                /* Child process */
+
+                /* Make sure that the new command is now a full path of the command */
+                cmd_act = environment(cmd);
+
+                if (cmd_act != NULL)
+                {
+                    if (execve(cmd_act, argv, NULL) < 0)
+                    {
+                        perror("Error: execve failed");
+                    }
+                }
+                else
+                {
+                    printf("Command not found: %s\n", cmd);
+                }
+
+                /* Exit the child process */
+                exit(EXIT_FAILURE);
+            }
+            else
+            {
+                /* Parent process */
+
+                /* Wait for the child process to finish */
+                int status;
+                waitpid(pid, &status, 0);
+            }
+        }
+
+        /* Print a new prompt */
+        printprompt_readline();
     }
-  }
-  
 }
