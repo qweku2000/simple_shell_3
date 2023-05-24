@@ -75,11 +75,11 @@ void executable(char *argv[])
                 }
 	      else
                 {
-		  printf("Command not found: %s\n", cmd);
+		  printf("%s: 1: %s: not found\n", argv[0],cmd);
                 }
 	      
 	      /* Exit the child process */
-	      exit(EXIT_FAILURE);
+	      exit(EXIT_SUCCESS);
             }
 	  else
             {
