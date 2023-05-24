@@ -47,8 +47,7 @@ void printprompt_readline()
     getline_bytes = getline(&buffer, &n, stdin);
     if (getline_bytes < 0)
     {
-        perror("Error: getline failed\n");
-        exit(EXIT_FAILURE);
+      exit(EXIT_SUCCESS);
     }
 
     buffer_copy = strdup(buffer);
@@ -58,9 +57,9 @@ void printprompt_readline()
 
     if (sstring)
     {
-        /* Keep adding up to keep track of the number of tokens needed */
-        ntokens++;
-        sstring = strtok(NULL, " \n");
+      /* Keep adding up to keep track of the number of tokens needed */
+      ntokens++;
+      sstring = strtok(NULL, " \n");
     }
     ntokens++;
 
@@ -69,8 +68,8 @@ void printprompt_readline()
     token = strtok(buffer_copy, " \n");
     for (i = 0; token != NULL; i++)
     {
-        string_arr[i] = strdup(token);
-        token = strtok(NULL, " \n");
+      string_arr[i] = strdup(token);
+      token = strtok(NULL, " \n");
     }
     string_arr[i] = NULL;
 
