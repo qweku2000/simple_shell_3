@@ -5,9 +5,14 @@
  *
  * Return: Always returns 0
  */
-int exit_shell()
+int exit_shell(char *status)
 {
-    exit(EXIT_SUCCESS);
+    int code;
+    if (status)
+    {
+      code = atoi(status);
+    }
+    exit(code);
     return 0;
 }
 
@@ -17,11 +22,13 @@ int exit_shell()
  *
  * Return: 0 on success, -1 on failure
  */
+
 int dir_change(char argv[])
 {
+    
     if (chdir(argv) < 0)
     {
-        perror("cd failed\n");
+        printf("cd failed\n");
         return (-1);
     }
     else
@@ -33,15 +40,21 @@ int dir_change(char argv[])
     return (0);
 }
 
-/**
- * environment_variables - Prints the environment variables
- */
-void environment_variables()
+
+
+extern char **environ;
+
+void environment_variables() 
 {
+    int i;
     char **env = environ;
-    // Iterate through the array of environment variables
-    for (int i = 0; env[i] != NULL; i++)
+    for (i=0;env[i] != NULL; i++) 
     {
         printf("%s\n", env[i]);
     }
 }
+
+
+
+
+

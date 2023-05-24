@@ -1,17 +1,17 @@
-
-
 #include "shell.h"
 
-/*
- * environment - Function that gets the full path of a command before running
+/**
+ * environment - Retrieves the full path of a command from the environment variables
+ * @env: The command to search for
+ *
+ * Return: The full path of the command if found, NULL otherwise
  */
-
-char* environment(char* env)
+char *environment(char *env)
 {
-    char* cmd_path = getenv("PATH");
-    char* copied_path;
-    char* paths;
-    char* full_path = NULL;
+    char *cmd_path = getenv("PATH");
+    char *copied_path;
+    char *paths;
+    char *full_path = NULL;
     struct stat path_info;
     int env_length, paths_length;
 
@@ -54,5 +54,5 @@ char* environment(char* env)
         }
     }
 
-    return (NULL);
+    return NULL;
 }
