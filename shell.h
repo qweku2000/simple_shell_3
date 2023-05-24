@@ -1,4 +1,5 @@
-
+#ifndef SHELL_H
+#def SHELL_H
 
 #include <stdio.h>
 #include <unistd.h>
@@ -23,3 +24,6 @@ void environment_variables();
 
 
 extern char **environ;
+
+
+#endif
