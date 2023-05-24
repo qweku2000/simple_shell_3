@@ -81,7 +81,7 @@ void printprompt_readline()
     string_arr[i] = NULL;
 
     executable(string_arr);
-
+    free(string_arr);
     free(buffer_copy);
     free(buffer);
 }
