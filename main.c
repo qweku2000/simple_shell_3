@@ -10,10 +10,10 @@
 int main(void)
 {
     while (1)
-    {
-        /* Print line and read prompt */
-        printprompt_readline();
-    }
+      {
+	/* Print line and read prompt */
+	printprompt_readline();
+      }
 
     return (0);
 }
@@ -33,19 +33,21 @@ void printprompt_readline()
     char **string_arr;
     char *token;
     char buf[1064];
-
-    if (getcwd(buf, sizeof(buf)) != NULL)
-    {
-        printf("%s\n$ ", buf);
-    }
-    else
-    {
-        perror("Error: cwd error");
-    }
-
-    /* Function for reading input from user */
-    getline_bytes = getline(&buffer, &n, stdin);
-    if (getline_bytes == -1)
+    int is_interactive = isatty(fileno(stdin));
+    if (is_interactive)
+      {
+	if (getcwd(buf, sizeof(buf)) != NULL)
+	  {
+	    printf("%s\n$ ", buf);
+	  }
+	else
+	  {
+	    perror("Error: cwd error");
+	  }
+      }
+	/* Function for reading input from user */
+	getline_bytes = getline(&buffer, &n, stdin);
+	if (getline_bytes == -1)
     {
       exit(0);
     }
