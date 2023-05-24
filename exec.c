@@ -7,90 +7,90 @@
  */
 void executable(char *argv[])
 {
-    char *cmd = NULL;
-    char *cmd_act = NULL;
+  char *cmd = NULL;
+  char *cmd_act = NULL;
     
-
-    if (argv)
+  
+  if (argv)
     {
-        /* Command is assigned to the first string in argv */
-        cmd = argv[0];
-
-        if (strcmp(cmd, "exit") == 0)
+      /* Command is assigned to the first string in argv */
+      cmd = argv[0];
+      
+      if (strcmp(cmd, "exit") == 0)
         {
-            exit_shell();
+	  exit_shell();
         }
-        else if (strcmp(cmd, "cd") == 0)
+      else if (strcmp(cmd, "cd") == 0)
         {
-            /* Change directory using chdir function */
-           
+	  /* Change directory using chdir function */
+          
           if(!argv[1])
-          {
-            char *home_dir = getenv("HOME");
-    if (home_dir)
-    {
-        if (chdir(home_dir) != 0)
-        {
-            perror("Error: chdir failed");
-        }
-    }
-    else
-    {
-        printf("Error: HOME environment variable not set\n");
-    }
-          }
-           else if (chdir(argv[1]) != 0)
+	    {
+	      char *home_dir = getenv("HOME");
+	      if (home_dir)
+		{
+		  if (chdir(home_dir) != 0)
+		    {
+		      perror("Error: chdir failed");
+		    }
+		}
+	      else
+		{
+		  printf("Error: HOME environment variable not set\n");
+		}
+	    }
+	  else if (chdir(argv[1]) != 0)
             {
-                perror("Error: chdir failed");
+	      perror("Error: chdir failed");
             }
         }
-        else if(strcmp(cmd,"env")==0)
+      else if(strcmp(cmd,"env")==0)
         {
-                environment_variables();
+	  environment_variables();
         }
-        else
+      else
         {
-            /* Execute external command */
+	  /* Execute external command */
 
-            /* Create a child process */
-            pid_t pid = fork();
-
-            if (pid < 0)
+	  /* Create a child process */
+	  pid_t pid = fork();
+	  
+	  if (pid < 0)
             {
-                perror("Error: Fork failed");
+	      perror("Error: Fork failed");
             }
-            else if (pid == 0)
+	  else if (pid == 0)
             {
-                /* Child process */
-
-                /* Make sure that the new command is now a full path of the command */
-                cmd_act = environment(cmd);
-
-                if (cmd_act != NULL)
+	      /* Child process */
+	      
+	      /* Make sure that the new command is now a full path of the command */
+	      cmd_act = environment(cmd);
+	      
+	      if (cmd_act != NULL)
                 {
-                    if (execve(cmd_act, argv, NULL) < 0)
+		  if (execve(cmd_act, argv, NULL) < 0)
                     {
-                        perror("Error: execve failed");
+		      perror("Error: execve failed");
                     }
                 }
-                else
+	      else
                 {
-                    printf("Command not found: %s\n", cmd);
+		  printf("Command not found: %s\n", cmd);
                 }
-
-                /* Exit the child process */
-                exit(EXIT_FAILURE);
+	      
+	      /* Exit the child process */
+	      exit(EXIT_FAILURE);
             }
-            else
+	  else
             {
-                /* Parent process */
-
-                /* Wait for the child process to finish */
-                int status;
-                waitpid(pid, &status, 0);
+	      /* Parent process */
+	      
+	      /* Wait for the child process to finish */
+	      int status;
+	      waitpid(pid, &status, 0);
             }
         }
-
-        
+      
+      
     }
 }

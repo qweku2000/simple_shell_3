@@ -45,43 +45,42 @@ void printprompt_readline()
 	    perror("Error: cwd error");
 	  }
       }
-	/* Function for reading input from user */
-	getline_bytes = getline(&buffer, &n, stdin);
-	if (getline_bytes == -1)
-	  {
-	    exit(0);
-	  }
-	if (getline_bytes == 1 && buffer[0] == '\n')
-	  {
-	    free(buffer);
-	    return;
-	  }
-	
-	buffer_copy = strdup(buffer);
-	
-	/* Tokenize string */
-	sstring = strtok(buffer, " \n");
-	
-	if (sstring)
-    {
-      /* Keep adding up to keep track of the number of tokens needed */
-      ntokens++;
-      sstring = strtok(NULL, " \n");
-    }
+    /* Function for reading input from user */
+    getline_bytes = getline(&buffer, &n, stdin);
+    if (getline_bytes == -1)
+      {
+	exit(0);
+      }
+    if (getline_bytes == 1 && buffer[0] == '\n')
+      {
+	free(buffer);
+	return;
+      }
+    
+    buffer_copy = strdup(buffer);
+    
+    /* Tokenize string */
+    sstring = strtok(buffer, " \n");
+    
+    if (sstring)
+      {
+	/* Keep adding up to keep track of the number of tokens needed */
+	ntokens++;
+	sstring = strtok(NULL, " \n");
+      }
     ntokens++;
-
+    
     string_arr = malloc(sizeof(char *) * (ntokens + 1));
-
+    
     token = strtok(buffer_copy, " \n");
     for (i = 0; token != NULL; i++)
-    {
-      string_arr[i] = strdup(token);
-      token = strtok(NULL, " \n");
-    }
+      {
+	string_arr[i] = strdup(token);
+	token = strtok(NULL, " \n");
+      }
     string_arr[i] = NULL;
-
+    
     executable(string_arr);
-    free(string_arr);
     free(buffer_copy);
     free(buffer);
 }
