@@ -47,7 +47,7 @@ void printprompt_readline()
     getline_bytes = getline(&buffer, &n, stdin);
     if (getline_bytes < 0)
     {
-      exit(EXIT_SUCCESS);
+      exit(0);
     }
 
     buffer_copy = strdup(buffer);
