@@ -45,7 +45,7 @@ void printprompt_readline()
 
     /* Function for reading input from user */
     getline_bytes = getline(&buffer, &n, stdin);
-    if (getline_bytes < 0)
+    if (getline_bytes == -1)
     {
       exit(0);
     }
