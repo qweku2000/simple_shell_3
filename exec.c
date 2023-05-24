@@ -91,7 +91,6 @@ void executable(char *argv[])
             }
         }
 
-        /* Print a new prompt */
-        printprompt_readline();
+        
     }
 }
