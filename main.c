@@ -70,7 +70,7 @@ void printprompt_readline()
     }
     ntokens++;
 
-    string_arr = malloc(sizeof(char *) * ntokens + 1);
+    string_arr = malloc(sizeof(char *) * (ntokens + 1));
 
     token = strtok(buffer_copy, " \n");
     for (i = 0; token != NULL; i++)
