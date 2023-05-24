@@ -48,6 +48,7 @@ char *environment(char *env)
 	  return (env);
 	}
     }
-
+  free(full_path);
+  free(copied_path);
   return (NULL);
 }
