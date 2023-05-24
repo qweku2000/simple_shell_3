@@ -48,16 +48,21 @@ void printprompt_readline()
 	/* Function for reading input from user */
 	getline_bytes = getline(&buffer, &n, stdin);
 	if (getline_bytes == -1)
-    {
-      exit(0);
-    }
-
-    buffer_copy = strdup(buffer);
-
-    /* Tokenize string */
-    sstring = strtok(buffer, " \n");
-
-    if (sstring)
+	  {
+	    break;
+	  }
+	if (getline_bytes == 1 && buffer[0] == '\n')
+	  {
+	    free(buffer);
+	    return;
+	  }
+	
+	buffer_copy = strdup(buffer);
+	
+	/* Tokenize string */
+	sstring = strtok(buffer, " \n");
+	
+	if (sstring)
     {
       /* Keep adding up to keep track of the number of tokens needed */
       ntokens++;
