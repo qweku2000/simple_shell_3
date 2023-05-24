@@ -49,7 +49,7 @@ void printprompt_readline()
 	getline_bytes = getline(&buffer, &n, stdin);
 	if (getline_bytes == -1)
 	  {
-	    break;
+	    exit(0);
 	  }
 	if (getline_bytes == 1 && buffer[0] == '\n')
 	  {
