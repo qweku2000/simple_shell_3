@@ -1,22 +1,6 @@
 #include "shell.h"
 
 /**
- * main - Main function contains loop for running commands
- *
- * Return: 0 on success
- */
-int main(void)
-{
-    while (1)
-    {
-        /* Print line and read prompt */
-        printprompt_readline();
-    }
-
-    return (0);
-}
-
-/**
  * printprompt_readline - Function to print prompt and read input from user
  */
 void printprompt_readline()
@@ -32,6 +16,7 @@ void printprompt_readline()
     char *token;
     char buf[1064];
     int is_interactive = isatty(fileno(stdin));
+
     if (is_interactive)
     {
         if (getcwd(buf, sizeof(buf)) != NULL)
@@ -43,16 +28,17 @@ void printprompt_readline()
             perror("Error: cwd error");
         }
     }
+
     /* Function for reading input from user */
     getline_bytes = getline(&buffer, &n, stdin);
     if (getline_bytes == -1)
     {
-        free(buffer);
+        free(buffer); // Free dynamically allocated buffer
         exit(0);
     }
     if (getline_bytes == 1 && buffer[0] == '\n')
     {
-        free(buffer);
+        free(buffer); // Free dynamically allocated buffer
         return;
     }
 
@@ -80,11 +66,12 @@ void printprompt_readline()
     string_arr[i] = NULL;
 
     executable(string_arr);
-    for (i = 0; i < ntokens; i++)
+
+    for (i = 0; string_arr[i] != NULL; i++)
     {
-        free(string_arr[i]);
+        free(string_arr[i]); // Free dynamically allocated string_arr elements
     }
-    free(string_arr);
-    free(buffer_copy);
-    free(buffer);
+    free(string_arr); // Free dynamically allocated string_arr
+    free(buffer_copy); // Free dynamically allocated buffer_copy
+    free(buffer); // Free dynamically allocated buffer
 }
