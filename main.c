@@ -2,18 +2,16 @@
 
 /**
  * main - Main function contains loop for running commands
- * @argc: Number of arguments passed to the program
- * @argv: Array of arguments passed to the program
  *
  * Return: 0 on success
  */
 int main(void)
 {
     while (1)
-      {
-	/* Print line and read prompt */
-	printprompt_readline();
-      }
+    {
+        /* Print line and read prompt */
+        printprompt_readline();
+    }
 
     return (0);
 }
@@ -35,56 +33,57 @@ void printprompt_readline()
     char buf[1064];
     int is_interactive = isatty(fileno(stdin));
     if (is_interactive)
-      {
-	if (getcwd(buf, sizeof(buf)) != NULL)
-	  {
-	    printf("%s\n$ ", buf);
-	  }
-	else
-	  {
-	    perror("Error: cwd error");
-	  }
-      }
+    {
+        if (getcwd(buf, sizeof(buf)) != NULL)
+        {
+            printf("%s\n$ ", buf);
+        }
+        else
+        {
+            perror("Error: cwd error");
+        }
+    }
     /* Function for reading input from user */
     getline_bytes = getline(&buffer, &n, stdin);
     if (getline_bytes == -1)
-      {
-	exit(0);
-      }
+    {
+        free(buffer);
+        exit(0);
+    }
     if (getline_bytes == 1 && buffer[0] == '\n')
-      {
-	free(buffer);
-	return;
-      }
-    
+    {
+        free(buffer);
+        return;
+    }
+
     buffer_copy = strdup(buffer);
-    
+
     /* Tokenize string */
     sstring = strtok(buffer, " \n");
-    
+
     if (sstring)
-      {
-	/* Keep adding up to keep track of the number of tokens needed */
-	ntokens++;
-	sstring = strtok(NULL, " \n");
-      }
+    {
+        /* Keep adding up to keep track of the number of tokens needed */
+        ntokens++;
+        sstring = strtok(NULL, " \n");
+    }
     ntokens++;
-    
+
     string_arr = malloc(sizeof(char *) * (ntokens + 1));
-    
+
     token = strtok(buffer_copy, " \n");
     for (i = 0; token != NULL; i++)
-      {
-	string_arr[i] = strdup(token);
-	token = strtok(NULL, " \n");
-      }
+    {
+        string_arr[i] = strdup(token);
+        token = strtok(NULL, " \n");
+    }
     string_arr[i] = NULL;
-    
+
     executable(string_arr);
-    for (i=0; i < ntokens; i++)
-      {
-	free(string_arr[i]);
-      }
+    for (i = 0; i < ntokens; i++)
+    {
+        free(string_arr[i]);
+    }
     free(string_arr);
     free(buffer_copy);
     free(buffer);
