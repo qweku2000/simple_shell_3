@@ -1,4 +1,16 @@
 #include "shell.h"
+int main()
+{
+  while (1)
+    {
+      printprompt_readline();
+    }
+  return (0);
+
+}
+
+
+
 
 /**
  * printprompt_readline - Function to print prompt and read input from user
@@ -32,15 +44,15 @@ void printprompt_readline()
     /* Function for reading input from user */
     getline_bytes = getline(&buffer, &n, stdin);
     if (getline_bytes == -1)
-    {
-        free(buffer); // Free dynamically allocated buffer
-        exit(0);
-    }
+      {
+      free(buffer); /*Free dynamically allocated buffer*/
+      exit(0);
+      }
     if (getline_bytes == 1 && buffer[0] == '\n')
-    {
-        free(buffer); // Free dynamically allocated buffer
-        return;
-    }
+      {
+	free(buffer); /*Free dynamically allocated buffer*/
+	return;
+      }
 
     buffer_copy = strdup(buffer);
 
@@ -69,9 +81,10 @@ void printprompt_readline()
 
     for (i = 0; string_arr[i] != NULL; i++)
     {
-        free(string_arr[i]); // Free dynamically allocated string_arr elements
+      free(string_arr[i]);
     }
-    free(string_arr); // Free dynamically allocated string_arr
-    free(buffer_copy); // Free dynamically allocated buffer_copy
-    free(buffer); // Free dynamically allocated buffer
+    free(string_arr);
+    free(buffer_copy);
+    free(buffer);
 }
+

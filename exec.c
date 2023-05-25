@@ -68,16 +68,16 @@ void executable(char *argv[])
                 {
                     if (execve(cmd_act, argv, NULL) < 0)
                     {
-                        perror("Error: execve failed");
-                        free(cmd_act); // Free dynamically allocated cmd_act
-                        exit(EXIT_FAILURE);
+                        perror("Error:");
+                        free(cmd_act); /*Free dynamically allocated cmd_act*/
+                        exit(EXIT_SUCCESS);
                     }
                 }
                 else
                 {
                     printf("%s: 1: %s: not found\n", argv[0], cmd);
-                    free(cmd_act); // Free dynamically allocated cmd_act
-                    exit(EXIT_FAILURE);
+                    free(cmd_act); /* Free dynamically allocated cmd_act*/
+                    exit(EXIT_SUCCESS);
                 }
             }
             else
@@ -91,5 +91,5 @@ void executable(char *argv[])
         }
     }
 
-    free(cmd_act); // Free dynamically allocated cmd_act (if not NULL)
+    free(cmd_act); /*Free dynamically allocated cmd_act (if not NULL)*/
 }
