@@ -1,4 +1,3 @@
-
 #include "shell.h"
 
 /**
@@ -7,90 +6,90 @@
  */
 void executable(char *argv[])
 {
-  char *cmd = NULL;
-  char *cmd_act = NULL;
-    
-  
-  if (argv)
-    {
-      /* Command is assigned to the first string in argv */
-      cmd = argv[0];
-      
-      if (strcmp(cmd, "exit") == 0)
-        {
-	  exit_shell();
-        }
-      else if (strcmp(cmd, "cd") == 0)
-        {
-	  /* Change directory using chdir function */
-          
-          if(!argv[1])
-	    {
-	      char *home_dir = getenv("HOME");
-	      if (home_dir)
-		{
-		  if (chdir(home_dir) != 0)
-		    {
-		      perror("Error: chdir failed");
-		    }
-		}
-	      else
-		{
-		  printf("Error: HOME environment variable not set\n");
-		}
-	    }
-	  else if (chdir(argv[1]) != 0)
-            {
-	      perror("Error: chdir failed");
-            }
-        }
-      else if(strcmp(cmd,"env")==0)
-        {
-	  environment_variables();
-        }
-      else
-        {
-	  /* Execute external command */
+    char *cmd = NULL;
+    char *cmd_act = NULL;
 
-	  /* Create a child process */
-	  pid_t pid = fork();
-	  
-	  if (pid < 0)
+    if (argv)
+    {
+        /* Command is assigned to the first string in argv */
+        cmd = argv[0];
+
+        if (strcmp(cmd, "exit") == 0)
+        {
+            exit_shell();
+        }
+        else if (strcmp(cmd, "cd") == 0)
+        {
+            /* Change directory using chdir function */
+
+            if (!argv[1])
             {
-	      perror("Error: Fork failed");
-            }
-	  else if (pid == 0)
-            {
-	      /* Child process */
-	      
-	      /* Make sure that the new command is now a full path of the command */
-	      cmd_act = environment(cmd);
-	      
-	      if (cmd_act != NULL)
+                char *home_dir = getenv("HOME");
+                if (home_dir)
                 {
-		  if (execve(cmd_act, argv, NULL) < 0)
+                    if (chdir(home_dir) != 0)
                     {
-		      perror("Error: execve failed");
+                        perror("Error: chdir failed");
                     }
                 }
-	      else
+                else
                 {
-		  printf("%s: 1: %s: not found\n", argv[0],cmd);
+                    printf("Error: HOME environment variable not set\n");
                 }
-	      
-	      /* Exit the child process */
-	      exit(EXIT_SUCCESS);
             }
-	  else
+            else if (chdir(argv[1]) != 0)
             {
-	      /* Parent process */
-	      
-	      /* Wait for the child process to finish */
-	      int status;
-	      waitpid(pid, &status, 0);
+                perror("Error: chdir failed");
             }
         }
-      
-      
+        else if (strcmp(cmd, "env") == 0)
+        {
+            environment_variables();
+        }
+        else
+        {
+            /* Execute external command */
+
+            /* Create a child process */
+            pid_t pid = fork();
+
+            if (pid < 0)
+            {
+                perror("Error: Fork failed");
+            }
+            else if (pid == 0)
+            {
+                /* Child process */
+
+                /* Make sure that the new command is now a full path of the command */
+                cmd_act = environment(cmd);
+
+                if (cmd_act != NULL)
+                {
+                    if (execve(cmd_act, argv, NULL) < 0)
+                    {
+                        perror("Error: execve failed");
+                        free(cmd_act); // Free dynamically allocated cmd_act
+                        exit(EXIT_FAILURE);
+                    }
+                }
+                else
+                {
+                    printf("%s: 1: %s: not found\n", argv[0], cmd);
+                    free(cmd_act); // Free dynamically allocated cmd_act
+                    exit(EXIT_FAILURE);
+                }
+            }
+            else
+            {
+                /* Parent process */
+
+                /* Wait for the child process to finish */
+                int status;
+                waitpid(pid, &status, 0);
+            }
+        }
     }
+
+    free(cmd_act); // Free dynamically allocated cmd_act (if not NULL)
 }
