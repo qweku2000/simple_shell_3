@@ -81,6 +81,10 @@ void printprompt_readline()
     string_arr[i] = NULL;
     
     executable(string_arr);
+    for (i=0; i < ntokens; i++)
+      {
+	free(string_arr[i]);
+      }
     free(string_arr);
     free(buffer_copy);
     free(buffer);
