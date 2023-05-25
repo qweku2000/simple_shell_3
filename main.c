@@ -1,24 +1,6 @@
 #include "shell.h"
 
 /**
- * main - Main function contains loop for running commands
- * @argc: Number of arguments passed to the program
- * @argv: Array of arguments passed to the program
- *
- * Return: 0 on success
- */
-int main(void)
-{
-    while (1)
-      {
-	/* Print line and read prompt */
-	printprompt_readline();
-      }
-
-    return (0);
-}
-
-/**
  * printprompt_readline - Function to print prompt and read input from user
  */
 void printprompt_readline()
@@ -34,54 +16,62 @@ void printprompt_readline()
     char *token;
     char buf[1064];
     int is_interactive = isatty(fileno(stdin));
+
     if (is_interactive)
-      {
-	if (getcwd(buf, sizeof(buf)) != NULL)
-	  {
-	    printf("%s\n$ ", buf);
-	  }
-	else
-	  {
-	    perror("Error: cwd error");
-	  }
-      }
+    {
+        if (getcwd(buf, sizeof(buf)) != NULL)
+        {
+            printf("%s\n$ ", buf);
+        }
+        else
+        {
+            perror("Error: cwd error");
+        }
+    }
+
     /* Function for reading input from user */
     getline_bytes = getline(&buffer, &n, stdin);
     if (getline_bytes == -1)
-      {
-	exit(0);
-      }
+    {
+        free(buffer); // Free dynamically allocated buffer
+        exit(0);
+    }
     if (getline_bytes == 1 && buffer[0] == '\n')
-      {
-	free(buffer);
-	return;
-      }
-    
+    {
+        free(buffer); // Free dynamically allocated buffer
+        return;
+    }
+
     buffer_copy = strdup(buffer);
-    
+
     /* Tokenize string */
     sstring = strtok(buffer, " \n");
-    
+
     if (sstring)
-      {
-	/* Keep adding up to keep track of the number of tokens needed */
-	ntokens++;
-	sstring = strtok(NULL, " \n");
-      }
+    {
+        /* Keep adding up to keep track of the number of tokens needed */
+        ntokens++;
+        sstring = strtok(NULL, " \n");
+    }
     ntokens++;
-    
+
     string_arr = malloc(sizeof(char *) * (ntokens + 1));
-    
+
     token = strtok(buffer_copy, " \n");
     for (i = 0; token != NULL; i++)
-      {
-	string_arr[i] = strdup(token);
-	token = strtok(NULL, " \n");
-      }
+    {
+        string_arr[i] = strdup(token);
+        token = strtok(NULL, " \n");
+    }
     string_arr[i] = NULL;
-    
+
     executable(string_arr);
-    free(string_arr);
-    free(buffer_copy);
-    free(buffer);
+
+    for (i = 0; string_arr[i] != NULL; i++)
+    {
+        free(string_arr[i]); // Free dynamically allocated string_arr elements
+    }
+    free(string_arr); // Free dynamically allocated string_arr
+    free(buffer_copy); // Free dynamically allocated buffer_copy
+    free(buffer); // Free dynamically allocated buffer
 }
