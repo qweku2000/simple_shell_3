@@ -40,7 +40,8 @@ void printprompt_readline()
     {
         if (getcwd(buf, sizeof(buf)) != NULL)
         {
-            printf("%s\n$ ", buf);
+            write(STDOUT_FILENO, buf, strlen(buf));
+	    write(STDOUT_FILENO, "\n$ ", 3);
         }
         else
         {
@@ -49,7 +50,7 @@ void printprompt_readline()
     }
 
     /* Function for reading input from user */
-    getline_bytes = getline(&buffer, &n, stdin);
+    getline_bytes = _getline(&buffer, &n, stdin);
     if (getline_bytes == -1)
       {
 	free(buffer); /*Free dynamically allocated buffer*/

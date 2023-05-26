@@ -1,0 +1,33 @@
+#include "shell.h"
+/**
+ *_setenv - Function for setting env variables
+ *return - void
+*/
+
+void _setenv(const char *var,const char* val)
+{
+ 
+  if (setenv(var,val,1) != 0)
+    {
+      fprintf(stderr, "Failed to set environment variable\n");
+    }
+}
+    
+
+
+
+/**
+ *_setenv - Function for setting env variables
+ *return - void
+*/
+
+void _unsetenv(const char *var)
+{
+
+  if (unsetenv(var) != 0)
+    {
+      fprintf(stderr, "Failed to unset environment variable\n");
+    }
+}
+
+
