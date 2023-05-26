@@ -45,8 +45,8 @@ void printprompt_readline()
     getline_bytes = getline(&buffer, &n, stdin);
     if (getline_bytes == -1)
       {
-      free(buffer); /*Free dynamically allocated buffer*/
-      exit(0);
+	free(buffer); /*Free dynamically allocated buffer*/
+	exit(0);
       }
     if (getline_bytes == 1 && buffer[0] == '\n')
       {
@@ -55,7 +55,7 @@ void printprompt_readline()
       }
 
     buffer_copy = strdup(buffer);
-
+    hashtags(buffer_copy);
     /* Tokenize string */
     sstring = strtok(buffer, " \n");
 
