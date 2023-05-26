@@ -19,7 +19,7 @@ void executable(char *argv[])
       
        if (strcmp(cmd, "exit") == 0)
 	  {
-            exit_shell();
+            exit_shell(argv[1]);
 	  }
         else if (strcmp(cmd, "cd") == 0)
 	  {
