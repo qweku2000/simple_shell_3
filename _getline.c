@@ -33,58 +33,59 @@ int _getchar(void)
  * Return: The number of characters read (excluding the null terminator),
  *         or -1 if an error occurred.
  */
+
 ssize_t _getline(char **lineptr, size_t *n, FILE *stream)
 {
-	if (lineptr == NULL || n == NULL || stream == NULL)
+  ssize_t bytes_allocated = *n;
+  size_t position = 0;
+  int current_char;
+  char *new_line_buffer;
+  if (lineptr == NULL || n == NULL || stream == NULL)
+    {
+      return -1;
+    }
+  
+  /* Allocate memory for the initial line buffer */
+  if (*lineptr == NULL)
+    {
+      *lineptr = (char *)malloc(bytes_allocated);
+      if (*lineptr == NULL)
 	{
-		return -1;
+	  perror("malloc failed");
+	  return -1;
 	}
-
-	ssize_t bytes_allocated = *n;
-	size_t position = 0;
-	int current_char;
-
-	/* Allocate memory for the initial line buffer */
-	if (*lineptr == NULL)
+    }
+  
+  while (1)
+    {
+      if (position == (size_t)bytes_allocated - 1)
 	{
-		*lineptr = (char *)malloc(bytes_allocated);
-		if (*lineptr == NULL)
-		{
-			perror("malloc failed");
-			return -1;
-		}
+	  bytes_allocated *= 2;
+	  new_line_buffer = (char *)realloc(*lineptr, bytes_allocated);
+	  
+	  if (new_line_buffer == NULL)
+	    {
+	      perror("realloc failed");
+	      free(*lineptr);
+	      return -1;
+	    }
+	  
+	  *lineptr = new_line_buffer;
 	}
-
-	while (1)
+      
+      current_char = _getchar();
+      
+      if (current_char == EOF || current_char == '\n')
 	{
-		if (position == bytes_allocated - 1)
-		{
-			bytes_allocated *= 2;
-			char *new_line_buffer = (char *)realloc(*lineptr, bytes_allocated);
-
-			if (new_line_buffer == NULL)
-			{
-				perror("realloc failed");
-				free(*lineptr);
-				return -1;
-			}
-
-			*lineptr = new_line_buffer;
-		}
-
-		current_char = _getchar();
-
-		if (current_char == EOF || current_char == '\n')
-		{
-			(*lineptr)[position] = '\0';
-			break;
-		}
-
-		(*lineptr)[position] = current_char;
-		position++;
+	  (*lineptr)[position] = '\0';
+	  break;
 	}
-
-	*n = bytes_allocated;
-
-	return (ssize_t)position;
+      
+      (*lineptr)[position] = current_char;
+      position++;
+    }
+  
+  *n = bytes_allocated;
+  
+  return (ssize_t)position;
 }
