@@ -1,4 +1,11 @@
 #include "shell.h"
+
+/**
+ *main - main entry point for program
+ *
+ * return - void
+*/
+
 int main()
 {
   while (1)
@@ -55,7 +62,9 @@ void printprompt_readline()
       }
 
     buffer_copy = strdup(buffer);
+   
     hashtags(buffer_copy);
+
     /* Tokenize string */
     sstring = strtok(buffer, " \n");
 
