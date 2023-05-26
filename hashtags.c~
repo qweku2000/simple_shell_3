@@ -1,0 +1,26 @@
+#include "shell.h"
+
+/**
+ *hashtags-Function for handling comments
+ *@input - input from getline
+ *
+ *Return - void
+
+
+int hashtag_checks(char *buffer)
+{
+  int i = 0;
+
+  for (i = 0; buffer[i] != '#'; i++)
+    {
+      if (buffer[i] == '#')
+	{
+	  return (0);
+	}
+      else
+	{
+	  return (1);
+	}
+    }
+}
+*/

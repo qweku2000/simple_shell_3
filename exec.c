@@ -1,5 +1,6 @@
 #include "shell.h"
 
+
 /**
  * executable - Executes the given command
  * @argv: Array of arguments passed to the command
@@ -9,10 +10,13 @@ void executable(char *argv[])
     char *cmd = NULL;
     char *cmd_act = NULL;
 
+    
     if (argv)
     {
         /* Command is assigned to the first string in argv */
         cmd = argv[0];
+
+       
 
         if (strcmp(cmd, "exit") == 0)
         {
@@ -64,13 +68,14 @@ void executable(char *argv[])
                 /* Make sure that the new command is now a full path of the command */
                 cmd_act = environment(cmd);
 
+
                 if (cmd_act != NULL)
                 {
-                    if (execve(cmd_act, argv, NULL) < 0)
+		  if (execve(cmd_act, argv, NULL) < 0)
                     {
-                        perror("Error:");
-                        free(cmd_act); /*Free dynamically allocated cmd_act*/
-                        exit(EXIT_SUCCESS);
+		      perror("Error:");
+		      free(cmd_act); /*Free dynamically allocated cmd_act*/
+		      exit(EXIT_SUCCESS);
                     }
                 }
                 else
